@@ -32,7 +32,7 @@
         /* Container & Navigation Tabs */
         .main-container { max-width: 1500px; margin: 25px auto; padding: 0 20px; }
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; flex-wrap: wrap; }
-        .nav-tab-btn { background: #e2e8f0; border: none; padding: 10px 18px; min-height: 44px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; color: #475569; display: flex; align-items: center; gap: 5px; }
+        .nav-tab-btn { background: #e2e8f0; border: none; padding: 10px 18px; min-height: 44px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; color: #475569; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .nav-tab-btn.active { background: var(--vh-blue); color: white; box-shadow: 0 4px 10px rgba(41,128,185,0.2); }
 
         .view-pane { display: none; animation: fadeIn 0.3s ease-in-out; }
@@ -63,7 +63,7 @@
         
         /* Tables */
         .table-responsive { overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 100%; }
         th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: center; vertical-align: middle; }
         th { background: #f8fafc; color: var(--vh-dark); font-weight: 600; white-space: nowrap; }
         .text-left { text-align: left !important; padding-left: 15px !important; }
@@ -87,7 +87,8 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-danger:hover { background: #c0392b; }
         .btn-primary { background: var(--vh-blue); color: white; width: 100%; font-size: 15px; }
-        .btn-warning { background: var(--warning); color: white; }
+        .btn-warning { background: var(--warning); color: #fff; }
+        .btn-warning:hover { background: #d68910; }
 
         .alert-box { padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; display: none; }
         .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
@@ -109,12 +110,12 @@
         @media (max-width: 768px) {
             .header { padding: 10px 15px; }
             .logo-text { font-size: 18px; margin-left: 8px; }
-            #user-welcome-text { display: none; } /* Ẩn text chào mừng trên mobile cho gọn */
+            #user-welcome-text { display: none; } 
             
             .main-container { padding: 0 10px; margin-top: 15px; margin-bottom: 70px; }
             .panel { padding: 15px; margin-bottom: 15px; }
-            
-            /* Bottom Navigation Bar */
+
+            /* Bottom Navigation Bar có khả năng cuộn ngang */
             .nav-tabs {
                 position: fixed;
                 bottom: 0;
@@ -129,19 +130,20 @@
                 display: flex;
                 flex-wrap: nowrap;
                 overflow-x: auto;
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
                 justify-content: flex-start;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
                 -webkit-overflow-scrolling: touch;
             }
+            .nav-tabs::-webkit-scrollbar { display: none; } /* Ẩn thanh cuộn trên mobile */
             .nav-tab-btn {
                 flex: 0 0 auto;
+                min-width: 90px;
                 font-size: 11px;
-                padding: 8px 12px;
+                padding: 8px 8px;
                 background: transparent;
                 color: #64748b;
                 border-radius: 0;
                 flex-direction: column;
-                min-width: 80px;
                 white-space: nowrap;
             }
             .nav-tab-btn.active {
@@ -170,10 +172,8 @@
             .main-container { margin: 0; padding: 0; }
             .menu-cards { display: flex !important; flex-direction: row !important; page-break-inside: avoid; }
             .menu-card { border: 1px solid #cbd5e1; }
-            .print-only { display: block !important; }
-            .view-pane { display: block !important; } /* Hiển thị toàn bộ khi in nếu cần, nhưng JS sẽ xử lý ẩn/hiện */
+            .view-pane { display: block !important; } 
         }
-        .print-only { display: none; }
     </style>
 </head>
 <body>
@@ -192,7 +192,7 @@
         <button class="btn btn-primary" onclick="handleLogin()">Truy Cập Chế Độ Admin</button>
         <div style="margin-top: 20px; font-size: 12px; color: #64748b; text-align: left; background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #e2e8f0;">
             🔑 <b>Mặc định mở toàn bộ tính năng:</b><br>
-            Bạn đang đăng nhập bằng quyền <b>Quản Trị Viên (ADMIN)</b>. Bạn có thể xem toàn bộ các tính năng của hệ thống.
+            Bạn đang đăng nhập bằng quyền <b>Quản Trị Viên (ADMIN)</b>. Bạn có thể xem toàn bộ các tính năng của hệ thống (Full Demo Mode).
         </div>
     </div>
 
@@ -210,13 +210,13 @@
         </div>
 
         <div class="main-container">
-            <!-- Thanh điều hướng Tab (Trở thành Bottom Nav trên Mobile) -->
+            <!-- Thanh điều hướng Tab -->
             <div class="nav-tabs no-print" id="nav-tabs-container">
                 <button class="nav-tab-btn active" onclick="switchView('view-dashboard', this)" id="tab-dashboard">📊 Dashboard</button>
-                <button class="nav-tab-btn" onclick="switchView('view-order', this)" id="tab-order">🛒 Đặt Hàng NCC</button>
                 <button class="nav-tab-btn" onclick="switchView('view-factory', this)" id="tab-factory">🏭 Khai Báo Xưởng</button>
                 <button class="nav-tab-btn" onclick="switchView('view-office', this)" id="tab-office">🏢 Khai Báo VP</button>
                 <button class="nav-tab-btn" onclick="switchView('view-guest', this)" id="tab-guest">🍽️ Cơm Khách</button>
+                <button class="nav-tab-btn" onclick="switchView('view-order', this)" id="tab-order">🛒 Đặt Hàng NCC</button>
                 <button class="nav-tab-btn" onclick="switchView('view-finance', this)" id="tab-finance">💰 Tài Chính & Báo Cáo</button>
             </div>
             
@@ -249,7 +249,6 @@
                     </div>
                 </div>
 
-                <!-- Bảng giám sát tiến độ (Đã tách khỏi Bảng Đặt Hàng) -->
                 <div class="panel no-print">
                     <h3 class="panel-title"><span>🚨 Giám Sát Tiến Độ Báo Suất (Đã Báo / Chưa Báo)</span></h3>
                     <div class="table-responsive">
@@ -259,8 +258,8 @@
                                     <th style="width: 50px;">STT</th>
                                     <th class="text-left">Đơn vị / Tổ sản xuất</th>
                                     <th style="width: 150px;">Trạng thái</th>
-                                    <th style="width: 130px;">Giờ nộp (Timestamp)</th>
-                                    <th style="width: 120px;">Số suất xác nhận</th>
+                                    <th style="width: 130px;">Giờ nộp</th>
+                                    <th style="width: 120px;">Xác nhận</th>
                                     <th class="text-left">Ghi chú & Cảnh báo</th>
                                 </tr>
                             </thead>
@@ -270,7 +269,162 @@
                 </div>
             </div>
 
-            <!-- ================= VIEW 2: ĐẶT HÀNG NHÀ CUNG CẤP (TAB MỚI) ================= -->
+            <!-- ================= VIEW 2: KHAI BÁO XƯỞNG (PIVOT DỌC) ================= -->
+            <div id="view-factory" class="view-pane">
+                <div class="panel" style="max-width: 800px; margin: auto;">
+                    <h3 class="panel-title">
+                        <span id="factory-panel-title">🏭 Cổng Khai Báo Suất Ăn Xưởng (2 Cầu)</span>
+                        <span style="font-size:12px; background:#e8f5e9; color:#27ae60; padding:4px 8px; border-radius:12px;">Mặc định: 0 (Báo thực tế)</span>
+                    </h3>
+                    
+                    <div class="alert-box alert-success" id="factory-alert">Đã gửi báo cáo suất ăn thành công đến nhà bếp!</div>
+
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <span style="font-size: 13px; color: #475569;">💡 <b>Hướng dẫn quy trình 2 cầu:</b><br>
+                        - <b>Cầu 1 (Kế Hoạch):</b> Đã chốt dự kiến lúc 17:00 chiều qua.<br>
+                        - <b>Cầu 2 (Thực Tế):</b> Xác nhận quân số thực tế trước 07:30 sáng nay.</span>
+                    </div>
+
+                    <!-- Bảng Pivot hiển thị tối ưu trên màn hình dọc -->
+                    <div class="table-responsive" style="overflow: visible;">
+                        <table style="min-width: unset;">
+                            <thead>
+                                <tr>
+                                    <th class="text-left" style="width: 30%;">Ca Làm Việc</th>
+                                    <th style="width: 35%;">Kế Hoạch<br><span style="font-size: 11px; font-weight: normal; color: #64748b;">(Cầu 1 - 17:00 qua)</span></th>
+                                    <th style="width: 35%;">Thực Tế<br><span style="font-size: 11px; font-weight: normal; color: var(--danger);">(Cầu 2 - Sáng nay)</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-left"><b>Ca 8h</b></td>
+                                    <td style="background: #f1f5f9; font-weight: bold; color: #64748b; font-size: 16px;">0</td>
+                                    <td><input type="number" id="f-8h" min="0" value="0" class="form-control" oninput="calcFactoryRow()"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left"><b>Ca 10h</b></td>
+                                    <td style="background: #f1f5f9; font-weight: bold; color: #64748b; font-size: 16px;">12</td>
+                                    <td><input type="number" id="f-10h" min="0" value="10" class="form-control" oninput="calcFactoryRow()"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left"><b>Tăng ca</b></td>
+                                    <td style="background: #f1f5f9; font-weight: bold; color: #64748b; font-size: 16px;">0</td>
+                                    <td><input type="number" id="f-tc" min="0" value="0" class="form-control" oninput="calcFactoryRow()"></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left"><b>Ca Đêm</b></td>
+                                    <td style="background: #f1f5f9; font-weight: bold; color: #64748b; font-size: 16px;">0</td>
+                                    <td><input type="number" id="f-dem" min="0" value="0" class="form-control" oninput="calcFactoryRow()"></td>
+                                </tr>
+                                <tr style="background: #fffbeb;">
+                                    <td class="text-left" style="color: var(--vh-dark); font-size: 15px;"><b>TỔNG CỘNG</b></td>
+                                    <td style="font-size: 18px; font-weight: bold; color: var(--vh-blue);">12</td>
+                                    <td id="f-row-total" style="font-size: 18px; font-weight: bold; color: var(--danger);">10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-success" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 16px;" onclick="submitFactoryReport()">GỬI XÁC NHẬN (CẦU 2)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 3: KHAI BÁO VĂN PHÒNG ================= -->
+            <div id="view-office" class="view-pane">
+                <div class="panel" style="max-width: 800px; margin: auto;">
+                    <h3 class="panel-title">🏢 Cổng Khai Báo Văn Phòng <span style="font-size:12px; background:#e8f5e9; color:#27ae60; padding:4px 8px; border-radius:12px;">Mặc định: CÓ ĂN</span></h3>
+                    
+                    <div class="alert-box alert-success" id="office-alert">Thao tác thành công! Hệ thống đã cập nhật số liệu.</div>
+
+                    <!-- 1. Cắt suất ngày thường -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                        <h4 style="margin-top:0; color:var(--vh-blue);">1. Báo nghỉ ngày thường (Cắt suất)</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Từ ngày</label><input type="date" id="off-start" class="form-control" onchange="calcOfficeLeave()"></div>
+                            <div class="form-group"><label>Đến ngày</label><input type="date" id="off-end" class="form-control" onchange="calcOfficeLeave()"></div>
+                        </div>
+                        <div id="off-calc-result" style="font-weight:600; color:#d35400; margin-bottom: 15px; font-size:14px; display:none;"></div>
+                        <div class="form-group"><label>Lý do nghỉ</label><input type="text" id="off-reason" class="form-control" placeholder="Ví dụ: Nghỉ phép, đi thị trường..."></div>
+                        <button class="btn btn-danger" onclick="submitOfficeLeave()">Xác Nhận Cắt Suất Ăn</button>
+                    </div>
+
+                    <!-- 2. Thêm suất Chủ Nhật -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                        <h4 style="margin-top:0; color:var(--vh-green);">2. Đăng ký làm Chủ Nhật (Thêm suất chính)</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Chọn ngày Chủ Nhật</label><input type="date" id="sun-date" class="form-control"></div>
+                            <div class="form-group"><label>Lý do làm thêm</label><input type="text" id="sun-reason" class="form-control" placeholder="Ví dụ: Xử lý dự án khẩn..."></div>
+                        </div>
+                        <button class="btn btn-success" onclick="submitOfficeSunday()">Xác Nhận Thêm Suất Chủ Nhật</button>
+                    </div>
+
+                    <!-- 3. Tăng ca trên 2 tiếng (Suất ăn nhẹ) -->
+                    <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 20px; border-radius: 8px;">
+                        <h4 style="margin-top:0; color:var(--warning);">3. Đăng ký tăng ca trên 2 tiếng (Suất ăn nhẹ)</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Ngày tăng ca</label><input type="date" id="ot-date" class="form-control"></div>
+                            <div class="form-group"><label>Số lượng nhân sự</label><input type="number" id="ot-count" class="form-control" value="1" min="1"></div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Nội dung công việc</label>
+                            <input type="text" id="ot-reason" class="form-control" placeholder="Ví dụ: Họp với khách hàng nước ngoài, làm báo cáo tài chính...">
+                        </div>
+                        <button class="btn btn-warning" onclick="submitOfficeOvertime()">Xác Nhận Đăng Ký Suất Ăn Nhẹ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 4: CƠM KHÁCH & XÉT DUYỆT ================= -->
+            <div id="view-guest" class="view-pane">
+                <div class="panel">
+                    <h3 class="panel-title"><span>🍽️ Quản Lý Đặt Cơm Khách & Trung Tâm Phê Duyệt</span></h3>
+                    
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                        <h4 style="margin-top:0; color:var(--vh-blue);">Tạo Đơn Cơm Khách Mới</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>Đối tượng khách</label><select class="form-control"><option>Khách hàng / Đối tác</option><option>Khách VIP</option></select></div>
+                            <div class="form-group"><label>Số lượng (Thường)</label><input type="number" class="form-control" value="4"></div>
+                            <div class="form-group"><label>Số lượng (VIP)</label><input type="number" class="form-control" value="2"></div>
+                        </div>
+                        <div class="form-group"><label>Tên đoàn khách & Lý do</label><input type="text" class="form-control"></div>
+                        <button class="btn btn-success" style="width: 100%;" onclick="alert('Đã gửi yêu cầu!')">Gửi Yêu Cầu (Chờ Duyệt)</button>
+                    </div>
+
+                    <h4 style="color:var(--vh-dark);">Danh Sách Chờ Xét Duyệt & Lịch Sử (Audit Trail)</h4>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Ngày dùng</th>
+                                    <th class="text-left">Đối tượng & Tên đoàn</th>
+                                    <th>Số lượng</th>
+                                    <th>Trạng Thái</th>
+                                    <th class="text-left" style="min-width: 220px;">Thao tác HR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><b>CK01</b></td><td>05/09/2026</td>
+                                    <td class="text-left">Khách hàng (4 Thường, 1 VIP)</td><td>5 suất</td>
+                                    <td><span class="badge badge-success">● ĐÃ DUYỆT</span></td>
+                                    <td class="text-left" style="color:var(--vh-green); font-weight: 600;">Hợp lệ, bếp đã nhận lệnh.</td>
+                                </tr>
+                                <tr>
+                                    <td><b>CK02</b></td><td>06/09/2026</td>
+                                    <td class="text-left">Khách VIP (0 Thường, 2 VIP)</td><td>2 suất</td>
+                                    <td><span class="badge badge-warning">⏳ CHỜ DUYỆT</span></td>
+                                    <td class="text-left">
+                                        <button class="btn btn-success" style="padding:8px 12px; font-size:12px;" onclick="approveGuest('CK02')">✔️ DUYỆT</button>
+                                        <button class="btn btn-danger" style="padding:8px 12px; font-size:12px;" onclick="rejectGuest('CK02')">❌ TỪ CHỐI</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 5: ĐẶT HÀNG NHÀ CUNG CẤP ================= -->
             <div id="view-order" class="view-pane">
                 <div class="panel" id="order-panel">
                     <h3 class="panel-title" style="color: var(--vh-blue);">
@@ -324,136 +478,6 @@
                 </div>
             </div>
 
-            <!-- ================= VIEW 3: KHAI BÁO XƯỞNG ================= -->
-            <div id="view-factory" class="view-pane">
-                <div class="panel" style="max-width: 1000px; margin: auto;">
-                    <h3 class="panel-title">
-                        <span id="factory-panel-title">🏭 Cổng Khai Báo Suất Ăn Xưởng (2 Cầu)</span>
-                        <span style="font-size:12px; background:#e8f5e9; color:#27ae60; padding:4px 8px; border-radius:12px;">Mặc định: 0 (Báo thực tế)</span>
-                    </h3>
-                    
-                    <div class="alert-box alert-success" id="factory-alert">Đã gửi báo cáo suất ăn thành công đến nhà bếp!</div>
-
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                        <span style="font-size: 13px; color: #475569;">💡 <b>Hướng dẫn quy trình 2 cầu:</b><br>
-                        - <b>Cầu 1 (17:00 chiều qua):</b> Nhập suất dự kiến.<br>
-                        - <b>Cầu 2 (07:30 sáng nay):</b> Xác nhận quân số thực tế.</span>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th class="text-left" style="min-width: 180px;">Mốc Thời Gian</th>
-                                    <th>Ca 8h</th>
-                                    <th>Ca 10h</th>
-                                    <th>Tăng ca</th>
-                                    <th>Ca Đêm</th>
-                                    <th>Tổng</th>
-                                    <th style="min-width: 120px;">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="background: #f1f5f9;">
-                                    <td class="text-left"><b>1. Suất Dự Kiến</b><br><span style="font-size:11px; color:#64748b;">(Đã chốt lúc 17:00 hôm qua)</span></td>
-                                    <td>0</td><td>12</td><td>0</td><td>0</td><td><b>12</b></td>
-                                    <td><span class="badge badge-secondary">ĐÃ KHÓA</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left" style="color:var(--vh-blue);"><b>2. Xác Nhận Sáng Nay</b></td>
-                                    <td><input type="number" id="f-8h" min="0" value="0" class="form-control" oninput="calcFactoryRow()"></td>
-                                    <td><input type="number" id="f-10h" min="0" value="10" class="form-control" oninput="calcFactoryRow()"></td>
-                                    <td><input type="number" id="f-tc" min="0" value="0" class="form-control" oninput="calcFactoryRow()"></td>
-                                    <td><input type="number" id="f-dem" min="0" value="0" class="form-control" oninput="calcFactoryRow()"></td>
-                                    <td id="f-row-total" style="font-weight:bold; font-size:16px; color:var(--danger);">10</td>
-                                    <td><button class="btn btn-success" style="padding: 6px 12px; font-size: 13px; width:100%;" onclick="submitFactoryReport()">Gửi Xác Nhận</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= VIEW 4: KHAI BÁO VĂN PHÒNG ================= -->
-            <div id="view-office" class="view-pane">
-                <div class="panel" style="max-width: 800px; margin: auto;">
-                    <h3 class="panel-title">🏢 Cổng Khai Báo Văn Phòng <span style="font-size:12px; background:#e8f5e9; color:#27ae60; padding:4px 8px; border-radius:12px;">Mặc định: CÓ ĂN</span></h3>
-                    
-                    <div class="alert-box alert-success" id="office-alert">Thao tác thành công! Hệ thống đã cập nhật số liệu.</div>
-
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-                        <h4 style="margin-top:0; color:var(--vh-blue);">1. Báo nghỉ ngày thường</h4>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Từ ngày</label><input type="date" id="off-start" class="form-control" onchange="calcOfficeLeave()"></div>
-                            <div class="form-group"><label>Đến ngày</label><input type="date" id="off-end" class="form-control" onchange="calcOfficeLeave()"></div>
-                        </div>
-                        <div id="off-calc-result" style="font-weight:600; color:#d35400; margin-bottom: 15px; font-size:14px; display:none;"></div>
-                        <div class="form-group"><label>Lý do nghỉ</label><input type="text" id="off-reason" class="form-control"></div>
-                        <button class="btn btn-danger" onclick="submitOfficeLeave()">Xác Nhận Cắt Suất Ăn</button>
-                    </div>
-
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-                        <h4 style="margin-top:0; color:var(--vh-green);">2. Đăng ký làm Chủ Nhật</h4>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Chọn ngày Chủ Nhật</label><input type="date" id="sun-date" class="form-control"></div>
-                            <div class="form-group"><label>Lý do làm thêm</label><input type="text" id="sun-reason" class="form-control"></div>
-                        </div>
-                        <button class="btn btn-success" onclick="submitOfficeSunday()">Xác Nhận Thêm Suất Chủ Nhật</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= VIEW 5: CƠM KHÁCH & XÉT DUYỆT ================= -->
-            <div id="view-guest" class="view-pane">
-                <div class="panel">
-                    <h3 class="panel-title"><span>🍽️ Quản Lý Đặt Cơm Khách & Trung Tâm Phê Duyệt</span></h3>
-                    
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-                        <h4 style="margin-top:0; color:var(--vh-blue);">Tạo Đơn Cơm Khách Mới</h4>
-                        <div class="form-grid">
-                            <div class="form-group"><label>Đối tượng khách</label><select class="form-control"><option>Khách hàng / Đối tác</option><option>Khách VIP</option></select></div>
-                            <div class="form-group"><label>Số lượng (Thường)</label><input type="number" class="form-control" value="4"></div>
-                            <div class="form-group"><label>Số lượng (VIP)</label><input type="number" class="form-control" value="2"></div>
-                        </div>
-                        <div class="form-group"><label>Tên đoàn khách & Lý do</label><input type="text" class="form-control"></div>
-                        <button class="btn btn-success" onclick="alert('Đã gửi yêu cầu!')">Gửi Yêu Cầu (Chờ Duyệt)</button>
-                    </div>
-
-                    <h4 style="color:var(--vh-dark);">Danh Sách Chờ Xét Duyệt & Lịch Sử (Audit Trail)</h4>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Mã Đơn</th>
-                                    <th>Ngày dùng</th>
-                                    <th class="text-left">Đối tượng & Tên đoàn</th>
-                                    <th>Số lượng</th>
-                                    <th>Trạng Thái</th>
-                                    <th class="text-left" style="min-width: 220px;">Thao tác HR</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><b>CK01</b></td><td>05/09/2026</td>
-                                    <td class="text-left">Khách hàng (4 Thường, 1 VIP)</td><td>5 suất</td>
-                                    <td><span class="badge badge-success">● ĐÃ DUYỆT</span></td>
-                                    <td class="text-left" style="color:var(--vh-green); font-weight: 600;">Hợp lệ, bếp đã nhận lệnh.</td>
-                                </tr>
-                                <tr>
-                                    <td><b>CK02</b></td><td>06/09/2026</td>
-                                    <td class="text-left">Khách VIP (0 Thường, 2 VIP)</td><td>2 suất</td>
-                                    <td><span class="badge badge-warning">⏳ CHỜ DUYỆT</span></td>
-                                    <td class="text-left">
-                                        <button class="btn btn-success" style="padding:6px; font-size:11px;" onclick="approveGuest('CK02')">✔️ DUYỆT</button>
-                                        <button class="btn btn-danger" style="padding:6px; font-size:11px;" onclick="rejectGuest('CK02')">❌ TỪ CHỐI</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
             <!-- ================= VIEW 6: TÀI CHÍNH & BÁO CÁO ================= -->
             <div id="view-finance" class="view-pane">
                 <div class="stats-grid">
@@ -476,7 +500,6 @@
                     <div class="chart-container"><canvas id="wasteBarChart"></canvas></div>
                 </div>
 
-                <!-- BÁO CÁO TỔNG HỢP (TUẦN/THÁNG) -->
                 <div class="panel" id="report-panel">
                     <h3 class="panel-title">
                         <span>📊 Trung Tâm Báo Cáo & Thống Kê (Tuần / Tháng)</span>
@@ -518,7 +541,6 @@
                         </table>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -528,6 +550,7 @@
         const today = new Date();
         document.getElementById('off-start').valueAsDate = today;
         document.getElementById('off-end').valueAsDate = today;
+        document.getElementById('ot-date').valueAsDate = today; // Mặc định ngày tăng ca là hôm nay
         
         let monthStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0');
         document.getElementById('report-period').value = monthStr;
@@ -603,24 +626,18 @@
             document.getElementById('stat-pending').innerText = `${pendingCount} Tổ`;
         }
 
-        // Logic xuất PDF khu vực cục bộ
         function exportPDF(panelId) {
             alert("Hệ thống mở giao diện in. Hãy chọn 'Lưu dưới dạng PDF' (Save as PDF). Các nội dung không cần thiết (Menu, Header) sẽ tự động ẩn đi!");
-            
-            // Xử lý CSS ẩn các view khác khi in
             document.querySelectorAll('.view-pane').forEach(el => {
                 if(el.id !== document.getElementById(panelId).closest('.view-pane').id) {
                     el.style.display = 'none';
                 }
             });
             window.print();
-            
-            // Khôi phục hiển thị sau khi in
             document.querySelectorAll('.view-pane').forEach(el => el.style.display = '');
             document.getElementById(document.getElementById(panelId).closest('.view-pane').id).classList.add('active');
         }
 
-        // Logic xuất Excel (CSV chung cho mọi bảng)
         function exportTableToCSV(tableId, filename) {
             const table = document.getElementById(tableId);
             let csv = [];
@@ -641,7 +658,7 @@
             alert("Đã xuất file Excel thành công!");
         }
 
-        // Tính toán khai báo
+        // Khai báo Xưởng Logic
         function calcFactoryRow() {
             const h8 = parseInt(document.getElementById('f-8h').value) || 0;
             const h10 = parseInt(document.getElementById('f-10h').value) || 0;
@@ -652,12 +669,29 @@
 
         function submitFactoryReport() { alert("Đã cập nhật cầu 2 thành công!"); }
         
+        // Khai báo VP Logic
+        function calcOfficeLeave() {
+            const s = new Date(document.getElementById('off-start').value);
+            const e = new Date(document.getElementById('off-end').value);
+            const res = document.getElementById('off-calc-result');
+            if(s > e) { res.style.display='block'; res.innerText="Ngày bắt đầu không lớn hơn kết thúc!"; return; }
+            let days = 0, sun = 0, cur = new Date(s);
+            while(cur <= e) {
+                if(cur.getDay() === 0) sun++; else days++;
+                cur.setDate(cur.getDate() + 1);
+            }
+            res.style.display = 'block';
+            res.innerHTML = `Số suất cắt thực tế: <span style="font-size:16px;">${days}</span> suất (Loại bỏ ${sun} ngày Chủ Nhật)`;
+        }
+        function submitOfficeLeave() { alert("Đã gửi yêu cầu cắt suất ăn thành công!"); }
+        function submitOfficeSunday() { alert("Đã đăng ký thêm suất Chủ Nhật thành công!"); }
+        function submitOfficeOvertime() { alert("Đã đăng ký suất ăn nhẹ (tăng ca trên 2 tiếng) thành công!"); }
+
         function approveGuest(id) { 
             if(confirm(`Xác nhận DUYỆT yêu cầu ${id}?`)) alert(`Đã duyệt đơn ${id}, chuyển lệnh cho bếp!`); 
         }
         function rejectGuest(id) { alert(`Đã từ chối đơn ${id}.`); }
 
-        // Logic Tạo dữ liệu Báo cáo Tuần/Tháng giả lập
         function generateReportData() {
             const type = document.getElementById('report-type').value;
             const tbody = document.getElementById('report-table-body');
@@ -666,7 +700,7 @@
             if(type === 'week') {
                 for(let i = 1; i <= 6; i++) {
                     let waste = Math.floor(Math.random() * 200000);
-                    let status = waste > 100000 ? '<span style="color:red; font-weight:bold;">Lãng phí cao (Cần chấn chỉnh)</span>' : '<span style="color:green; font-weight:bold;">Kiểm soát tốt</span>';
+                    let status = waste > 100000 ? '<span style="color:red; font-weight:bold;">Lãng phí cao</span>' : '<span style="color:green; font-weight:bold;">Kiểm soát tốt</span>';
                     html += `<tr><td>Thứ ${i+1}</td><td>${120 + i*5}</td><td>${(120+i*5)*30000}</td><td>${((120+i*5)*30000) - waste}</td><td style="color:red;">${waste}</td><td class="text-left">${status}</td></tr>`;
                 }
                 html += `<tr style="background:#e2e8f0; font-weight:bold;"><td>TỔNG TUẦN</td><td>810</td><td>24,300,000</td><td>23,800,000</td><td style="color:red;">500,000</td><td class="text-left">Đạt mục tiêu</td></tr>`;
@@ -680,7 +714,6 @@
             tbody.innerHTML = html;
         }
 
-        // Logic Biểu đồ
         function renderCharts() {
             if(!document.getElementById('costStructureChart')) return;
             const ctx1 = document.getElementById('costStructureChart').getContext('2d');
